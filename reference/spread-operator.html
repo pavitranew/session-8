@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Menu Highlights</title>
+	<link rel="stylesheet" href="css/styles.css">
+	<style>
+		* {
+			margin:0;
+			padding:0;
+			/*box-sizing: border-box;*/
+		}
+
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			margin: 1em;
+			font-size: 100%;
+		}
+
+		.menu-list {
+			padding:10px 0;
+			float:left;
+			min-width:304px; 
+			border-width: 4px 4px 0 4px;
+			border-left-style: solid;
+			border-right-style: solid;
+			border-image: linear-gradient(to bottom, rgb(200, 205, 210), rgba(0, 0, 0, 0)) 1 100%;
+			background: linear-gradient(to bottom, rgba(200, 205, 210,1) 0%, rgba(200, 205, 210,1) 1%, rgba(240,240,240,0.4) 1.5%, rgba(240,240,240,0) 100%);
+		}
+
+		.menu-list dl {
+			margin:20px; 
+			width: 260px; 
+		}
+
+		.menu-list dt {
+			letter-spacing: 1px; 
+			color: #627081; 
+			float: right;
+			width:162px;
+		}
+
+		.menu-list dd {
+			font-size: 0.875em;
+			line-height: 1.6; 
+			color: #666; 
+		}
+
+		.menu-list dd + dd {
+			margin: 0 0 0 98px; 
+		}
+
+		.menu-list img {
+			float:left;
+			margin: 0 8px 0 0;
+			padding: 4px;
+			border: 1px solid #d9e0e6;
+			border-bottom-color: #c8cdd2;
+			border-right-color: #c8cdd2;
+			background: #fff;
+			box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+		}
+
+		.menu-list dl:nth-child(even) dt {
+			float:left; 
+		}
+		.menu-list dl:nth-child(even) img {
+			float:right;
+			margin: 0 0 0 8px; 
+		}
+		.menu-list dl:nth-child(even) dd + dd {
+			margin: 0 98px 0 0; 
+		}
+		.popover {
+			position: absolute;
+			top: 30%;
+			display: none;
+		}
+		.showme {
+			display: block;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="menu-list">
+		<dl>
+			<dt>Spicy Tuna Roll</dt>
+			<dd><a href="img/1-lg.jpg"><img src="img/1.jpg" title="Tuna roll" alt="Tuna Roll"></a></dd>
+			<dd>Our specialty - spicy tuna rolls. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</dd>
+		</dl>
+		<dl>
+			<dt>Sushi for Two</dt>
+			<dd><a href="img/2-lg.jpg"><img src="img/2.jpg" title="Tuna roll" alt="Sushi for Two"></a></dd>
+			<dd>Enjoy a special treat for two. Orders also available for three or more.</dd>
+		</dl>
+		<dl>
+			<dt>Omikase</dt>
+			<dd><a href="img/3-lg.jpg"><img src="img/3.jpg" title="Tuna roll" alt="Omikase"></a></dd>
+			<dd>Allow our executive chef to prepare a special selection of the day's top choices.</dd>
+		</dl>
+		<div class="popover">
+			<img src="img/1-lg.jpg" />
+		</div>
+	</div>
+	<script>
+		var popover = document.querySelector('.popover')
+		var popoverImage = popover.querySelector('.popover img')
+
+		var linkedImages = document.querySelectorAll('a')
+		var imageLinks = [...linkedImages]
+		imageLinks.forEach( imageLink => imageLink.addEventListener('click', run))
+
+		function run() {
+			popoverImage.setAttribute('src', this.href)
+			popover.classList.toggle('showme')
+			event.preventDefault();
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

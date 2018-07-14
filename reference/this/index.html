@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>this</title>
+</head>
+<body>
+	<script>
+
+
+		function f1() {
+			// 'use strict';
+			return this;
+		}
+
+
+		function add(c, d) {
+			return this.a + this.b + c + d;
+		}
+		const n = {a: 1, b: 3};
+
+
+		function f() {
+			return this.a;
+		}
+		const g = f.bind({a: 'unicycle'});
+		const h = g.bind({a: 'cereal'});
+
+
+		const o = {
+			traditionalFunc: function () {
+				console.log('traditionalFunc: is this === o?', this === o);
+			},
+			arrowFunc: () => {
+				console.log('arrowFunc: is this === o?', this === o);
+				console.log('arrowFunc: is this === window?', this === window);
+			}
+		};
+
+
+		const p = {
+			prop: 37,
+			f: function() {
+				return this.prop;
+			}
+		};
+
+
+
+
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

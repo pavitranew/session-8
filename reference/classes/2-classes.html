@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Classes</title>
+</head>
+<body>
+  
+  <script>
+    class Car {
+      constructor(model, make) {
+        this.model = model;
+        this.make = make;
+      }
+      drive() {
+        console.log(`Vroom vroom 🚗 🚗 🚗! I'm a ${this.model} and I'm a ${this.make}`);
+      }
+      stop() {
+        console.log(`Screech! 🚒 🚑 🚓`);
+      }
+    }
+
+    const expo = new Car('Expo', 'Ford');
+    const miata = new Car('Miata', 'Mazda');
+
+  </script>
+</body>
+</html>

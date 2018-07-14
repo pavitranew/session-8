@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>bind</title>
+</head>
+<body>
+
+	<button>Click Me</button>
+
+	<script>
+	// talk is a method in an object
+	const dog = {
+		sound: 'woof',
+		talk: function(){
+			console.log(this.sound)
+		}
+	}
+
+	const myButton = document.querySelector('button')
+	// myButton.addEventListener('click', dog.talk)
+		// above 'this' will not be the dog
+		myButton.addEventListener('click', dog.talk.bind(dog))
+
+	</script>
+</body>
+</html>
