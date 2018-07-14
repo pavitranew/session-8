@@ -15,6 +15,8 @@ It is important to get some hands on with 'primitive' (i.e. outside the Create R
 
 ## Routing
 
+Make sure you are in the `react-pirates` directory.
+
 [Quick start](https://reacttraining.com/react-router/web/guides/quick-start)
 
 `npm install react-router-dom --save`
@@ -47,7 +49,7 @@ ReactDOM.render(
 
 ### Pirate Detail
 
-Use Header.js as a template
+Use `Header.js` as a template.
 
 ```js
 import React, { Component } from 'react'
@@ -74,10 +76,8 @@ class Main extends React.Component {
   render() {
     return (
     <Router>
-    <div>
       <Route exact path="/" component={App}/>
       <Route path="/pirate/:pid" component={PirateDetail} />
-    </div>
   </Router>
       )
   }
