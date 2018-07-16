@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import '../assets/css/Pirate.css'
 
 class Pirate extends Component {
   render(){
     const { details } = this.props;
     return (
+      <Router>
       <div className='pirate'>
       <ul>
       <li>{details.name}</li>
@@ -16,7 +18,8 @@ class Pirate extends Component {
           </button>
       </li>
       </ul>
-      </div>
+        </div>
+        </Router>
       )
   }
 }
