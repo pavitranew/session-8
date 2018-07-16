@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+import { HashRouter as Router, Route } from 'react-router-dom';
+import PirateDetail from './components/PirateDetail.js';
+// import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import base from './base';
 import Header from './components/Header';
 import Pirate from './components/Pirate';
@@ -14,6 +18,7 @@ class App extends Component {
     this.addPirate = this.addPirate.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.removePirate = this.removePirate.bind(this);
+    this.updatePirate = this.updatePirate.bind(this)
     this.state = {
       pirates: {}
     }
@@ -21,8 +26,10 @@ class App extends Component {
 
   render() {
     return (
+      <Router>
       <div className="App">
-        <Header />
+      <Header headerTitle="Pirates!" />
+      <Route path='/' component={PirateDetail} />
         <ul>
           {
             Object.keys(this.state.pirates)
@@ -35,10 +42,13 @@ class App extends Component {
           }
         </ul>
         <PirateForm
+          updatePirate={this.updatePirate}
+          pirates={this.state.pirates}
           addPirate={this.addPirate}
           loadSamples={this.loadSamples}
         />
       </div>
+      </Router>
     );
   }
 
@@ -63,6 +73,12 @@ class App extends Component {
     // delete pirates[key]
     pirates[key] = null;
     this.setState({pirates})
+  }
+
+  updatePirate(key, updatedPirate){
+    const pirates = {...this.state.pirates};
+    pirates[key] = updatedPirate;
+    this.setState({ pirates })
   }
 
   componentWillMount(){

@@ -13,13 +13,12 @@ It is important to get some hands on with 'primitive' (i.e. outside the Create R
 * Spend some quality time with the exercises on [Built with React](http://buildwithreact.com) (do the simple Tutorial).
 * Another useful tutorial you could try is the official [Intro to React](https://reactjs.org/tutorial/tutorial.html) tutorial.
 
-
 ## React Project
 
-```bash
+```sh
 cd react-pirates
 npm i
-npm run start
+npm start
 ```
 
 ## Stateless Components
@@ -50,10 +49,12 @@ To:
 ```js
 import React from 'react';
 import '../assets/css/Header.css';
+import logo from '../assets/img/anchor.svg';
 
-const Header = props => {
+const Header = (props) => {
   return (
     <div className="header">
+    <img src={logo} className="logo" alt="logo" />
       <h1>{props.headerTitle}</h1>
     </div>
   );
@@ -67,12 +68,12 @@ Add the required prop.
 * `App`:
 
 ```html
-<Header headerTitle="Pirates List" />
+<Header headerTitle="Pirates!" />
 ```
 
-Note - no 'this' required in the props.
+Note - no 'this' required in the props. No render method - just a return.
 
-### Persisting the Data
+### Persisting the Data - Review
 
 Demo using db on Firebase. Firebase is like one big object.
 
@@ -198,7 +199,7 @@ We will now use `PirateFrom` to allow the user to edit the pirates from a single
 
 Make the state available to the `PirateForm`
 
-* `App`:
+* `App.js`:
 
 `pirates={this.state.pirates}`:
 
@@ -208,10 +209,9 @@ pirates={this.state.pirates}
 addPirate={this.addPirate}
 loadSamples={this.loadSamples}
 />
-</div>
 ```
 
-* `PirateForm`:
+* `PirateForm.js`:
 
 Call `renderPirates` with a `.map`:
 
@@ -232,7 +232,7 @@ Add the function
   }
 ```
 
-Note that we are calling this method from the retrun value of the component's render function.
+Note that we are calling this method from the return value of the component's render function.
 
 Update the method to display additional data:
 
@@ -550,20 +550,6 @@ render(){
   const logout = <button onClick={() => this.logout()}>Log Out</button>;
 ```
 
-### Notes
-
-Create a repo.
-
-Sub git a build
-
-Set `"homepage": "https://xxx.github.io/<repo-name>"` in package.json
-
-
-
-
-
-
-
 ## Routing
 
 Make sure you are in the `react-pirates` directory.
@@ -572,14 +558,14 @@ Make sure you are in the `react-pirates` directory.
 
 `npm install react-router-dom --save`
 
-app
+`App.js`:
 
-```
+```js
 import { HashRouter as Router, Route } from 'react-router-dom';
-import PirateDetail from './components/PirateDetail.js';
+// import PirateDetail from './components/PirateDetail.js';
 ```
 
-```
+```js
     return (
       <Router>
       <div className="App">
