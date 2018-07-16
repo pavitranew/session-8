@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 
-import { HashRouter as Router, Route } from 'react-router-dom';
+// import { HashRouter as Router, Route } from 'react-router-dom';
 import PirateDetail from './components/PirateDetail.js';
-// import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Switch from '../node_modules/react-router-dom/Switch';
 
 import base from './base';
 import Header from './components/Header';
 import Pirate from './components/Pirate';
 import PirateForm from './components/PirateForm';
+import NavBar from './components/NavBar';
 
 import piratesFile from './data/sample-pirates-object';
 
@@ -29,7 +31,11 @@ class App extends Component {
       <Router>
       <div className="App">
       <Header headerTitle="Pirates!" />
-      <Route path='/' component={PirateDetail} />
+      <NavBar />
+      <Switch>
+        <Route path='/detail/:id' render = { () => <PirateDetail pirates={this.state.pirates} /> 
+        } />
+      </Switch>
         <ul>
           {
             Object.keys(this.state.pirates)
@@ -53,14 +59,9 @@ class App extends Component {
   }
 
   addPirate(pirate) {
-    //take a copy of the current state and put it into pirates var
     const pirates = {...this.state.pirates}
-    //create a unique id
     const timestamp = Date.now()
-    //add new pirate using accessor and id - 
-    // objectName["propertyName"] and assignment
     pirates[`pirate-${timestamp}`] = pirate
-    //set state pirates with var pirates
     this.setState({ pirates: pirates })
   }
 

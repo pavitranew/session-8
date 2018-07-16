@@ -593,26 +593,25 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 
   `import { BrowserRouter as Router, Route } from 'react-router-dom';`
 
-
-```
+```js
   <Route path='/' component={PirateDetail} />
   <Route path='/foo' component={PirateDetail} />
 ```
 
-2 should show
+Two should show.
 
 `import Switch from '../node_modules/react-router-dom/Switch';`
 
-```
+```js
       <Switch>
         <Route path='/' component={PirateDetail} />
         <Route path='/foo' component={PirateDetail} />
       </Switch>
 ```
 
-NavBar.js
+`NavBar.js`:
 
-```
+```js
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -621,6 +620,7 @@ class NavBar extends Component {
     return (
       <nav>
         <Link to='/' className="navLink">Home</Link>
+        <Link to='/foo' className="navLink">Foo</Link>
       </nav>
       )
   }
@@ -629,7 +629,7 @@ class NavBar extends Component {
 export default NavBar;
 ```
 
-```
+```js
       <NavBar />
       <Switch>
         <Route path='/' component={PirateDetail} exact={true} />
@@ -637,7 +637,7 @@ export default NavBar;
       </Switch>
 ```
 
-```
+```js
       <Switch>
         <Route path='/detail/:id' component={PirateDetail}  /> 
         {/* exact={true} */}
@@ -645,8 +645,9 @@ export default NavBar;
       </Switch>
 ```
 
+`Pirate.js`:
 
-```
+```js
 import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
@@ -678,118 +679,48 @@ class Pirate extends Component {
 export default Pirate;
 ```
 
+`PirateDetail.js`:
 
-```
+```js
 import React, { Component } from 'react';
-import base from '../base';
 
 class PirateDetail extends Component {
 
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.state = {}
+    this.renderPirate = this.renderPirate.bind(this);
   }
   render() {
     return (
       <div className="pirate-detail">
         <h2>Pirate Detail</h2>
 
-        {/* if (this.state.pirates){
-          console.log(this.state.pirates)
-        } */}
-
-        {/* {
-          Object.keys(this.state.pirates).filter( (pirate) =>
-          {
-            console.log(this)
-            return pirate
-            }
-          )
-        } */}
+        {Object.keys(this.props.pirates).map(this.renderPirate)} 
 
       </div>
       )
   }
 
-  componentWillMount(){
-    this.ref = base.syncState(`daniel-deverell-pirates/pirates`, {
-      context: this,
-      state: 'pirates'
-    })
-  }
+renderPirate(key){
+  const pirate = this.props.pirates[key]
+  return (
+  <div key={key}>
+    <p>{key}</p>
+  </div>
+  )}
+
 }
 
 export default PirateDetail;
+
 ```
 
-
-
-
-
-<!-- 
-* `index.js`:
+`App.js`:
 
 ```js
-import {
-  BrowserRouter as Router,
-  Route
-} from 'react-router-dom'
-
-class Main extends React.Component {
-  render() {
-    return (
-    <Router>
-    <div>
-      <Route exact path="/" component={App}/>
-    </div>
-  </Router>
-      )
-  }
-}
-
-ReactDOM.render(
-  <Main />,
-  document.getElementById('root')
-  );
+      <Switch>
+        <Route path='/detail/:id' render = { () => <PirateDetail pirates={this.state.pirates} /> 
+        } />
+      </Switch>
 ```
-
-### Pirate Detail
-
-Use `Header.js` as a template.
-
-```js
-import React, { Component } from 'react'
-
-class PirateDetail extends Component {
-  render() {
-    return (
-      <div className="pirate-detail">
-        <h1>Pirate detail</h1>
-      </div>
-      )
-  }
-}
-
-export default PirateDetail;
-```
-
-`<Route path="/pirate/:pid" component={PirateDetail} />`:
-
-```js
-import PirateDetail from './PirateDetail';
-
-class Main extends React.Component {
-  render() {
-    return (
-    <Router>
-      <Route exact path="/" component={App}/>
-      <Route path="/pirate/:pid" component={PirateDetail} />
-  </Router>
-      )
-  }
-}
-```
-
-We probably want the routing to occur in `App.js` to keep the header and replace `<Pirate />` and `<PirateForm />` -->
-
-## Notes
