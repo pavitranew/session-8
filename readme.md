@@ -21,6 +21,90 @@ Make sure you are in the `react-pirates` directory.
 
 `npm install react-router-dom --save`
 
+app
+
+```
+import { HashRouter as Router, Route } from 'react-router-dom';
+import PirateDetail from './components/PirateDetail.js';
+```
+
+```
+    return (
+      <Router>
+      <div className="App">
+        <Header />
+        <Route path='/' component={PirateDetail} />
+        <ul>
+          {
+            Object.keys(this.state.pirates)
+              .map( key => <Pirate
+                key={key}
+                index={key}
+                details={this.state.pirates[key]}
+                removePirate = {this.removePirate}
+              />)
+          }
+        </ul>
+        <PirateForm
+          addPirate={this.addPirate}
+          loadSamples={this.loadSamples}
+        />
+        </div>
+        </Router>
+    );
+  ```
+
+  `import { BrowserRouter as Router, Route } from 'react-router-dom';`
+
+
+```
+  <Route path='/' component={PirateDetail} />
+  <Route path='/foo' component={PirateDetail} />
+```
+
+2 should show
+
+`import Switch from '../node_modules/react-router-dom/Switch';`
+
+```
+      <Switch>
+        <Route path='/' component={PirateDetail} />
+        <Route path='/foo' component={PirateDetail} />
+      </Switch>
+```
+
+NavBar.js
+
+```
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+class NavBar extends Component {
+  render() {
+    return (
+      <nav>
+        <Link to='/' className="navLink">Home</Link>
+      </nav>
+      )
+  }
+}
+
+export default NavBar;
+```
+
+```
+      <NavBar />
+      <Switch>
+        <Route path='/' component={PirateDetail} exact={true} />
+        {/* <Route path='/foo' component={PirateDetail} /> */}
+      </Switch>
+```
+
+
+
+
+
+<!-- 
 * `index.js`:
 
 ```js
@@ -84,6 +168,6 @@ class Main extends React.Component {
 }
 ```
 
-We probably want the routing to occur in `App.js` to keep the header and replace `<Pirate />` and `<PirateForm />`
+We probably want the routing to occur in `App.js` to keep the header and replace `<Pirate />` and `<PirateForm />` -->
 
 ## Notes
