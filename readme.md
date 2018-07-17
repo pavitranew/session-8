@@ -594,14 +594,14 @@ Test by logging in and out. Note the user in Firebase. This can be deleted if yo
 
 `npm install react-router-dom --save`
 
-app
+`App.js`:
 
-```
+```js
 import { HashRouter as Router, Route } from 'react-router-dom';
-import PirateDetail from './components/PirateDetail.js';
+// import PirateDetail from './components/PirateDetail.js';
 ```
 
-```
+```js
     return (
       <Router>
       <div className="App">
@@ -629,8 +629,7 @@ import PirateDetail from './components/PirateDetail.js';
 
   `import { BrowserRouter as Router, Route } from 'react-router-dom';`
 
-
-```
+```js
   <Route path='/' component={PirateDetail} />
   <Route path='/foo' component={PirateDetail} />
 ```

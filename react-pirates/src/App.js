@@ -7,6 +7,9 @@ import PirateForm from './components/PirateForm';
 
 import piratesFile from './data/sample-pirates-object';
 
+import { HashRouter as Router, Route } from 'react-router-dom';
+// import PirateDetail from './components/PirateDetail.js';
+
 class App extends Component {
 
   constructor() {
@@ -22,8 +25,11 @@ class App extends Component {
 
   render() {
     return (
+      <Router>
       <div className="App">
       <Header headerTitle="Pirates!" />
+      <Route path='/' component={PirateDetail} />
+      
           {
             Object.keys(this.state.pirates)
               .map( key => <Pirate
@@ -41,6 +47,7 @@ class App extends Component {
           loadSamples={this.loadSamples}
         />
       </div>
+      </Router>
     );
   }
 
