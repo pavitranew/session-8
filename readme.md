@@ -23,23 +23,24 @@ npm run start
 
 ## Stateless Components
 
-Not every component needs to be involved with data. When you only need to render some material use a Stateless Functional Component.
+Not every component needs to be involved with data. When you only need to render some UI use a `Stateless Functional Component`.
 
-* Simplify `Header`:
+* Simplify `Header.js` from:
 
 ```js
 import React, { Component } from 'react';
-import '../assets/css/Header.css';
+import '../assets/css/Header.css'
+import logo from '../assets/img/anchor.svg';
 
-class Header extends React.Component {
-  render() {
+class Header extends Component {
+  render(){
     return (
       <div className="header">
-        <h1>Header Component</h1>
-      </div>
-    );
+        <img src={logo} className="logo" alt="logo" />
+        <h1>Pirates!</h1>
+      </div>)
+    }
   }
-}
 
 export default Header;
 ```
@@ -48,11 +49,13 @@ To:
 
 ```js
 import React from 'react';
-import '../assets/css/Header.css';
+import '../assets/css/Header.css'
+import logo from '../assets/img/anchor.svg';
 
 const Header = props => {
   return (
     <div className="header">
+    <img src={logo} className="logo" alt="logo" />
       <h1>{props.headerTitle}</h1>
     </div>
   );
@@ -63,10 +66,10 @@ export default Header;
 
 Add the required prop.
 
-* `App`:
+* `App.js`:
 
 ```html
-<Header headerTitle="Pirates List" />
+<Header headerTitle="Pirates!" />
 ```
 
 Note - no 'this' required in the props.
@@ -75,38 +78,24 @@ Note - no 'this' required in the props.
 
 Demo using db on Firebase. Firebase is like one big object.
 
-1. Create an account at [Firebase](https://firebase.com/)
+1. Create a free account at [Firebase](https://firebase.com/)
 1. Create a new project called `<firstname>-<lastname>-pirates`
 1. Create Project
 1. Go to the empty database (left hand menu)
 
-Click on Rules at the top.
+Click on Create Database at the top and choose `Start in Test Mode`.
 
-* Default
+This changes the defaults to:
 
 ```js
-{
-  "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write;
+    }
   }
 }
 ```
-
-Change defaults to:
-
-```js
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
-```
-
-and click Publish.
-
-Examine App.js state. Any change to pirates needs to be made to firebase.
 
 in src create `base.js`
 
@@ -116,13 +105,14 @@ import Rebase from 're-base'
 const base = Rebase.createClass({
 
 })
+
+export default base;
 ```
 
-[Rebase](https://www.npmjs.com/package/rebase) is a simple utility that we are going to need to massage strings.
+[Rebase](https://www.npmjs.com/package/rebase) is a utility that we are going to use to connect to Firebase and bind the data so whenever your data changes, your state will be updated.
 
-`$ npm install re-base@2.2.0 --save`
-
-Or add `"re-base": "2.2.0"` to your package.json dependencies.
+`$ npm install re-base --save`
+<!-- `$ npm install re-base@2.2.0 --save` -->
 
 ### Add domain, database URL, API key
 
@@ -131,12 +121,12 @@ In Firebase click on Project Overview > Add Firebase to your web app.
 Extract the following information:
 
 ```js
-apiKey: "AIzaSyAHnKw63CUBAqSuCREgils_waYJ0qwpGiU",
-authDomain: "daniel-deverell-pirates.firebaseapp.com",
-databaseURL: "https://daniel-deverell-pirates.firebaseio.com",
+apiKey: "XXXXXXXX",
+authDomain: "XXXXXXXX",
+databaseURL: "XXXXXXXXX",
 ```
 
-* base.js:
+* e.g. in `base.js`:
 
 ```js
 import Rebase from 're-base';
@@ -189,15 +179,24 @@ removePirate(key){
 }
 ```
 
-## Bi-Directional Data
+Test in the browser. Check that the Database > Rules are set properly:
 
-* React's version of $scope
+```js
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+```
+
+## Bi-Directional Data
 
 We will now use `PirateFrom` to allow the user to edit the pirates from a single location.
 
 Make the state available to the `PirateForm`
 
-* `App`:
+* `App.js`:
 
 `pirates={this.state.pirates}`:
 
@@ -210,7 +209,7 @@ loadSamples={this.loadSamples}
 </div>
 ```
 
-* `PirateForm`:
+* `PirateForm.js`:
 
 Call `renderPirates` with a `.map`:
 
@@ -218,20 +217,21 @@ Call `renderPirates` with a `.map`:
 render(){
   return (
     <div>
+    <h3>Pirate Form Component</h3>
     {Object.keys(this.props.pirates).map(this.renderPirates)}
 ```
 
 Add the function
 
 ```js
-  renderPirates(key){
-    return (
-    <p>{key}</p>
-    )
-  }
+renderPirates(key){
+  return (
+  <p>{key}</p>
+  )
+}
 ```
 
-Note that we are calling this method from the retrun value of the component's render function.
+Note that we are calling this method from the return value of the component's render function.
 
 Update the method to display additional data:
 
@@ -259,20 +259,24 @@ Note the error. We need a constructor.
   }
 ```
 
+Try changing `<div key={key}>` to `<div>` to see why this is included. Be sure to change it back again.
+
 Again, note the error. React only allows you to put state into a field if you have the intention of editing it. We will use `onChange`.
 
-Listen for a change on one input.
+Listen for a change on one input with `onChange={ (e) => this.handleChange(e, key)}`.
 
-```html
-<input value={pirate.name} onChange={(e) => this.handleChange(e, key)} type="text" name="name" placeholder="Pirate name" />
+```jsx
+<input value={pirate.name}
+  onChange={ (e) => this.handleChange(e, key) }
+  type="text" name="name" placeholder="Pirate name" />
 ```
 
 Create the method:
 
 ```js
-  handleChange(e, key){
-    const pirate = this.props.pirates[key]
-  }
+handleChange(e, key){
+  const pirate = this.props.pirates[key]
+}
 ```
 
 Remember to bind it in the constructor:
@@ -288,14 +292,16 @@ constructor() {
 Test by sending the pirate to the console:
 
 ```js
-  handleChange(e, key){
-    const pirate = this.props.pirates[key]
-    console.log(pirate)
-    console.log(e.target)
-    console.log(e.target.value)
-    console.log(e.target.name, e.target.value)
-  }
+handleChange(e, key){
+  const pirate = this.props.pirates[key]
+  console.log(pirate)
+  console.log(e.target)
+  console.log(e.target.value)
+  console.log(e.target.name, e.target.value)
+}
 ```
+
+Note the values for `e.target.name` and `e.target.value`.
 
 Values need to be put into state.
 
@@ -303,31 +309,31 @@ Values need to be put into state.
 
 `const updatedPIrate = Object.assign([], pirate)` -->
 
-We will use spread operator and overlay the new properties on top of it. `e.target.name` gives us the property name so we will use what's know as a computed property:
+We will use spread operator and overlay the new properties on top of it. `e.target.name` gives us the property name so we will use what's known as a computed property:
 
 ```js
-  handleChange(e, key){
-    const pirate = this.props.pirates[key]
-    const updatedPirate = {
-      ...pirate,
-      [e.target.name]: e.target.value
-    }
-    console.log(updatedPirate)
+handleChange(e, key){
+  const pirate = this.props.pirates[key]
+  const updatedPirate = {
+    ...pirate,
+    [e.target.name]: e.target.value
   }
+  console.log(updatedPirate)
+}
 ```
 
 ## Moving the Function to App.js
 
 Pass the updated pirate to the App component for updating.
 
-* `App`:
+* `App.js`:
 
 ```js
-  updatePirate(key, updatedPirate){
-    const pirates = {...this.state.pirates};
-    pirates[key] = updatedPirate;
-    this.setState({ pirates })
-  }
+updatePirate(key, updatedPirate){
+  const pirates = {...this.state.pirates};
+  pirates[key] = updatedPirate;
+  this.setState({ pirates })
+}
 ```
 
 Pass the method to the component.
@@ -345,7 +351,7 @@ Pass the method to the component.
 
 Bind it.
 
-* App
+* `App.js`:
 
 ```js
 constructor() {
@@ -359,18 +365,20 @@ constructor() {
 }
 ```
 
-* `PirateForm`:
+* `PirateForm.js`:
 
 ```js
-  handleChange(e, key){
-    const pirate = this.props.pirates[key]
-    const updatedPirate = {
-      ...pirate,
-      [e.target.name]: e.target.value
-    }
-    this.props.updatePirate(key, updatedPirate);
+handleChange(e, key){
+  const pirate = this.props.pirates[key]
+  const updatedPirate = {
+    ...pirate,
+    [e.target.name]: e.target.value
   }
+  this.props.updatePirate(key, updatedPirate);
+}
 ```
+
+Test and note the data sync between the form and the Pirate listing above.
 
 Add the onChange handler to the other fields.
 
@@ -388,31 +396,31 @@ renderPirates(key){
 }
 ```
 
-Test and check out Firebase. We now have two way communication with the database. Look ma! No Submit button.
+Test and exmine Firebase. We now have two way communication with the database. No Submit button required.
 
 ## Authentication
 
-* Firebase
+* Firebase:
 
-Enable Github authentication under Authentication > Sign In Method
+Enable Github authentication in Firebase under `Authentication > Sign In Method`
 
-* Github
+* Github:
 
-Navigate to Settings > Developer settings > OAuth Apps and register a new OAuth application.
+Sign in, navigate to `Settings` (top left under your account). Find `Developer Settings > OAuth Apps` and register a new OAuth application.
 
 Copy the URL from Firebase and enter the Client ID and Client Secret into Firebase.
 
-* `PirateForm`:
+* `PirateForm.js`:
 
 ```js
-  renderLogin(){
-    return (
-      <div>
-      <p>Sign in</p>
-      <button onClick={() => this.authenticate('github')} >Log in with Github</button>
-      </div>
-      )
-  }
+renderLogin(){
+  return (
+    <div>
+    <p>Sign in</p>
+    <button onClick={ () => this.authenticate('github') } >Log in with Github</button>
+    </div>
+    )
+}
 ```
 
 and bind it
@@ -429,38 +437,61 @@ and bind it
 Set an initial value for uid in state:
 
 ```js
-  constructor() {
-    super();
-    this.renderPirates = this.renderPirates.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.renderLogin = this.renderLogin.bind(this);
-    this.state = {
-      uid: null
-    }
+constructor() {
+  super();
+  this.renderPirates = this.renderPirates.bind(this);
+  this.handleChange = this.handleChange.bind(this);
+  this.renderLogin = this.renderLogin.bind(this);
+  this.state = {
+    uid: null
   }
+}
 ```
 
 Add an if statement that shows a button to log in:
 
-```js
-  render(){
-    const logout = <button>Log Out</button>;
-    if(!this.state.uid) {
-      return <div>{this.renderLogin()}</div>
-    }
+<!-- ```js
+render(){
+  const logout = <button>Log Out</button>;
+  if(!this.state.uid) {
+    return <div>{this.renderLogin()}</div>
+  }
 
-    return (
-      <div>
-      {logout}
-      {Object.keys(this.props.pirates).map(this.renderPirates)}
-      <h3>Pirate Form Component</h3>
-      <AddPirateForm addPirate={this.props.addPirate} />
-      <button onClick={this.props.loadSamples}>Load Sample Pirates</button>`
-      </div>
-      )
+  return (
+    <div>
+    {logout}
+    <h3>Pirate Form Component</h3>
+    {Object.keys(this.props.pirates).map(this.renderPirates)}
+    <h3>Pirate Form Component</h3>
+    <AddPirateForm addPirate={this.props.addPirate} />
+    <button onClick={this.props.loadSamples}>Load Sample Pirates</button>`
+    </div>
+    )
   }
 }
+``` -->
+
+```js
+render(){
+
+  const logout = <button>Log Out</button>;
+  if(!this.state.uid) {
+    return <div>{this.renderLogin()}</div>
+  }
+
+  return (
+    <div>
+    {logout}
+    <h3>Pirate Form Component</h3>
+    {Object.keys(this.props.pirates).map(this.renderPirates)}
+      <AddPirateForm addPirate={this.props.addPirate} />
+      <button onClick={this.props.loadSamples}> Load Sample Pirates </button>
+    </div>
+    )
+}
 ```
+
+Note the code location here - in the render method but not in the return. Also note the use of the `logout` variable in the return statement.
 
 Create the authenticate method and bind it
 
@@ -481,6 +512,8 @@ Create the authenticate method and bind it
   }
 ```
 
+And click on the button to test.
+
 Import base:
 
 ```js
@@ -488,15 +521,17 @@ import base from '../base';
 ```
 
 ```js
-  authenticate(provider){
-    console.log(`Trying to log in with ${provider}`);
-    base.authWithOAuthPopup(provider, this.authHandler);
-  }
+authenticate(provider){
+  console.log(`Trying to log in with ${provider}`);
+  base.authWithOAuthPopup(provider, this.authHandler);
+}
 
-  authHandler(err, authData) {
-    console.log(authData)
-  }
+authHandler(err, authData) {
+  console.log(authData)
+}
 ```
+
+Test.
 
 Bind the authHandler:
 
@@ -505,17 +540,19 @@ Bind the authHandler:
 If no error add uid to state.
 
 ```js
-  authHandler(err, authData) {
-    console.log(authData)
-    if (err){
-      console.log(err);
-      return;
-    }
-    this.setState({
-      uid: authData.user.uid
-    })
+authHandler(err, authData) {
+  console.log(authData)
+  if (err){
+    console.log(err);
+    return;
   }
+  this.setState({
+    uid: authData.user.uid
+  })
+}
 ```
+
+Test and note any messages in the console. Make changes in Firebase to allow the sign in provider if necessary.
 
 Refresh is a problem. Use a lifecycle hook.
 
@@ -549,23 +586,9 @@ render(){
   const logout = <button onClick={() => this.logout()}>Log Out</button>;
 ```
 
-### Notes
-
-Create a repo.
-
-Sub git a build
-
-Set `"homepage": "https://xxx.github.io/<repo-name>"` in package.json
-
-
-
-
-
-
+Test by logging in and out. Note the user in Firebase. This can be deleted if you need to re-login.
 
 ## Routing
-
-Make sure you are in the `react-pirates` directory.
 
 [Quick start](https://reacttraining.com/react-router/web/guides/quick-start)
 
