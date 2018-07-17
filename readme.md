@@ -598,8 +598,32 @@ Test by logging in and out. Note the user in Firebase. This can be deleted if yo
 
 ```js
 import { HashRouter as Router, Route } from 'react-router-dom';
-// import PirateDetail from './components/PirateDetail.js';
+import PirateDetail from './components/PirateDetail.js';
 ```
+
+Create a new Pirate Detail component:
+
+```js
+import React, { Component } from 'react';
+import base from '../base';
+
+class PirateDetail extends Component {
+  
+  render() {
+    return (
+      <div className="pirate-detail">
+        <h3>Pirate Detail</h3>
+      </div>
+      )
+  }
+}
+
+export default PirateDetail;
+```
+
+Create our first route.
+
+`App.js`:
 
 ```js
 return (
@@ -607,47 +631,45 @@ return (
   <div className="App">
     <Header />
     <Route path='/' component={PirateDetail} />
-    <ul>
-      {
-        Object.keys(this.state.pirates)
-          .map( key => <Pirate
-            key={key}
-            index={key}
-            details={this.state.pirates[key]}
-            removePirate = {this.removePirate}
-          />)
-      }
-    </ul>
-    <PirateForm
-      addPirate={this.addPirate}
-      loadSamples={this.loadSamples}
-    />
+    ...
     </div>
     </Router>
 );
-  ```
-
-  `import { BrowserRouter as Router, Route } from 'react-router-dom';`
-
-```js
-  <Route path='/' component={PirateDetail} />
-  <Route path='/foo' component={PirateDetail} />
 ```
 
-2 should show
+Remove the hash by using BrowserRouter.
+
+`import { BrowserRouter as Router, Route } from 'react-router-dom';`
+
+(Clear out any hashes from the location bar.)
+
+Create a second route:
+
+```js
+<Route path='/' component={PirateDetail} />
+<Route path='/foo' component={PirateDetail} />
+```
+
+Test it by navigating to `/foo`. There should be two instances of the component. This is because both paths match.
+
+We can prevent this by using `exact`:
+
+`<Route path='/' component={PirateDetail} exact />`
+
+But we will use another method - `Switch`:
 
 `import Switch from '../node_modules/react-router-dom/Switch';`
 
-```
-      <Switch>
-        <Route path='/' component={PirateDetail} />
-        <Route path='/foo' component={PirateDetail} />
-      </Switch>
+```js
+<Switch>
+  <Route path='/' component={PirateDetail} />
+  <Route path='/foo' component={PirateDetail} />
+</Switch>
 ```
 
-NavBar.js
+Create `NavBar.js` in the components folder:
 
-```
+```js
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -656,6 +678,7 @@ class NavBar extends Component {
     return (
       <nav>
         <Link to='/' className="navLink">Home</Link>
+        <Link to='/foo' className="navLink">Foo</Link>
       </nav>
       )
   }
@@ -664,36 +687,48 @@ class NavBar extends Component {
 export default NavBar;
 ```
 
-```
-      <NavBar />
-      <Switch>
-        <Route path='/' component={PirateDetail} exact={true} />
-        {/* <Route path='/foo' component={PirateDetail} /> */}
-      </Switch>
+Import it into `App.js`:
+
+`import NavBar from './components/NavBar';`
+
+And insert it into `App.js`:
+
+```js
+<NavBar />
+<Switch>
+  <Route path='/' component={PirateDetail} exact={true} />
+  {/* <Route path='/foo' component={PirateDetail} /> */}
+</Switch>
 ```
 
-```
-      <Switch>
-        <Route path='/detail/:id' component={PirateDetail}  /> 
-        {/* exact={true} */}
-        {/* <Route path='/foo' component={PirateDetail} /> */}
-      </Switch>
+Optional: style the NavBar.
+
+Let use a parameterized path to show the Detail component.
+
+```js
+<Switch>
+  <Route path='/detail/:id' component={PirateDetail}  /> 
+  {/* exact={true} */}
+  {/* <Route path='/foo' component={PirateDetail} /> */}
+</Switch>
 ```
 
+Test with `http://localhost:3000/detail/foo`.
 
-```
+Edit the Pirate component to include links. Make `Link` available to the component, create a `linkUrl` variable and use it to create a `link` on the name property.
+
+`Pirate.js`:
+
+```js
 import React, { Component } from 'react';
-
+import '../assets/css/Pirate.css';
 import { Link } from 'react-router-dom';
-
-import '../assets/css/Pirate.css'
 
 class Pirate extends Component {
   render(){
     const { details } = this.props;
     let linkUrl = `/detail/${this.props.index}`;
     return (
-
       <div className='pirate'>
       <ul>
       <li><Link to={linkUrl}>{details.name}</Link></li>
@@ -705,126 +740,72 @@ class Pirate extends Component {
           </button>
       </li>
       </ul>
-        </div>
-
+      </div>
       )
   }
 }
 export default Pirate;
 ```
 
+Optional: style the links.
 
+Test the links. Note that the Pirate Detail shows.
+
+Pass the pirates into the Detail component.
+
+`App.js`:
+
+```js
+<Switch>
+  <Route path='/detail/:id'
+    render = { () => <PirateDetail pirates={this.state.pirates} />}
+  />
+</Switch>
 ```
+
+Note that the Pirates are now available to the Detail component as props.
+
+Edit Pirate Detail to show some data.
+
+`PirateDetail.js`:
+
+```js
 import React, { Component } from 'react';
-import base from '../base';
 
 class PirateDetail extends Component {
 
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.state = {}
+    this.renderPirate = this.renderPirate.bind(this);
   }
+
   render() {
     return (
       <div className="pirate-detail">
         <h2>Pirate Detail</h2>
 
-        {/* if (this.state.pirates){
-          console.log(this.state.pirates)
-        } */}
-
-        {/* {
-          Object.keys(this.state.pirates).filter( (pirate) =>
-          {
-            console.log(this)
-            return pirate
-            }
-          )
-        } */}
+        {Object.keys(this.props.pirates).map(this.renderPirate)}
 
       </div>
       )
   }
 
-  componentWillMount(){
-    this.ref = base.syncState(`daniel-deverell-pirates/pirates`, {
-      context: this,
-      state: 'pirates'
-    })
-  }
+renderPirate(key){
+  const pirate = this.props.pirates[key]
+  return (
+  <div key={key}>
+    <p>{key}</p>
+  </div>
+  )
+}
+
 }
 
 export default PirateDetail;
+
 ```
 
+## End
 
-
-
-
-<!-- 
-* `index.js`:
-
-```js
-import {
-  BrowserRouter as Router,
-  Route
-} from 'react-router-dom'
-
-class Main extends React.Component {
-  render() {
-    return (
-    <Router>
-    <div>
-      <Route exact path="/" component={App}/>
-    </div>
-  </Router>
-      )
-  }
-}
-
-ReactDOM.render(
-  <Main />,
-  document.getElementById('root')
-  );
-```
-
-### Pirate Detail
-
-Use `Header.js` as a template.
-
-```js
-import React, { Component } from 'react'
-
-class PirateDetail extends Component {
-  render() {
-    return (
-      <div className="pirate-detail">
-        <h1>Pirate detail</h1>
-      </div>
-      )
-  }
-}
-
-export default PirateDetail;
-```
-
-`<Route path="/pirate/:pid" component={PirateDetail} />`:
-
-```js
-import PirateDetail from './PirateDetail';
-
-class Main extends React.Component {
-  render() {
-    return (
-    <Router>
-      <Route exact path="/" component={App}/>
-      <Route path="/pirate/:pid" component={PirateDetail} />
-  </Router>
-      )
-  }
-}
-```
-
-We probably want the routing to occur in `App.js` to keep the header and replace `<Pirate />` and `<PirateForm />` -->
-
-## Notes
+Use another Array method (`find` or `filter`) on the render method's return value to display additional details for a _single_ Pirate.

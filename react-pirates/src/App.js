@@ -4,11 +4,13 @@ import base from './base';
 import Header from './components/Header';
 import Pirate from './components/Pirate';
 import PirateForm from './components/PirateForm';
+import NavBar from './components/NavBar';
 
 import piratesFile from './data/sample-pirates-object';
 
-import { HashRouter as Router, Route } from 'react-router-dom';
-// import PirateDetail from './components/PirateDetail.js';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import PirateDetail from './components/PirateDetail.js';
+import Switch from '../node_modules/react-router-dom/Switch';
 
 class App extends Component {
 
@@ -28,7 +30,13 @@ class App extends Component {
       <Router>
       <div className="App">
       <Header headerTitle="Pirates!" />
-      <Route path='/' component={PirateDetail} />
+      <NavBar />
+
+<Switch>
+  <Route path='/detail/:id'
+    render = { () => <PirateDetail pirates={this.state.pirates} />} 
+  />
+</Switch>
       
           {
             Object.keys(this.state.pirates)
