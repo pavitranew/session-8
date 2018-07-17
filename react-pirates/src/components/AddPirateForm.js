@@ -5,6 +5,8 @@ import '../assets/css/AddPirateForm.css';
 class AddPirateForm extends Component {
   render(){
     return (
+      <div>
+      <h4>Add Pirate Form</h4>
       <form
         ref={ (input) => this.pirateForm = input }
         onSubmit={(e) => this.createPirate(e)
@@ -14,6 +16,7 @@ class AddPirateForm extends Component {
         <input ref={ (input) => this.weapon = input } type="text" placeholder="Pirate weapon" />
         <button type="submit">Add Pirate</button>
       </form>
+      </div>
     )
   }
 

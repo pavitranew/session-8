@@ -1,12 +1,8 @@
-.pirate {
-	font-family: 'Trade Winds', cursive;
-}
-
 .pirate ul {
   display: flex;
   flex-direction: row;
   list-style: none;
-  padding: 0;
+  padding: 0.25rem;
   margin-bottom: 0.5rem;
 }
 

@@ -23,7 +23,6 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <ul>
           {
             Object.keys(this.state.pirates)
               .map( key => <Pirate
@@ -33,7 +32,7 @@ class App extends Component {
                 removePirate = {this.removePirate}
               />)
           }
-        </ul>
+
         <PirateForm
           addPirate={this.addPirate}
           loadSamples={this.loadSamples}

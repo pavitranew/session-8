@@ -13,7 +13,6 @@ It is important to get some hands on with 'primitive' (i.e. outside the Create R
 * Spend some quality time with the exercises on [Built with React](http://buildwithreact.com) (do the simple Tutorial).
 * Another useful tutorial you could try is the official [Intro to React](https://reactjs.org/tutorial/tutorial.html) tutorial.
 
-
 ## React Project
 
 ```bash
