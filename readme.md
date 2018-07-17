@@ -602,29 +602,29 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 ```
 
 ```js
-    return (
-      <Router>
-      <div className="App">
-        <Header />
-        <Route path='/' component={PirateDetail} />
-        <ul>
-          {
-            Object.keys(this.state.pirates)
-              .map( key => <Pirate
-                key={key}
-                index={key}
-                details={this.state.pirates[key]}
-                removePirate = {this.removePirate}
-              />)
-          }
-        </ul>
-        <PirateForm
-          addPirate={this.addPirate}
-          loadSamples={this.loadSamples}
-        />
-        </div>
-        </Router>
-    );
+return (
+  <Router>
+  <div className="App">
+    <Header />
+    <Route path='/' component={PirateDetail} />
+    <ul>
+      {
+        Object.keys(this.state.pirates)
+          .map( key => <Pirate
+            key={key}
+            index={key}
+            details={this.state.pirates[key]}
+            removePirate = {this.removePirate}
+          />)
+      }
+    </ul>
+    <PirateForm
+      addPirate={this.addPirate}
+      loadSamples={this.loadSamples}
+    />
+    </div>
+    </Router>
+);
   ```
 
   `import { BrowserRouter as Router, Route } from 'react-router-dom';`
