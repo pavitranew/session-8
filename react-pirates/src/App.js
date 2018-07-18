@@ -14,6 +14,7 @@ class App extends Component {
     this.addPirate = this.addPirate.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.removePirate = this.removePirate.bind(this);
+    this.updatePirate = this.updatePirate.bind(this);
     this.state = {
       pirates: {}
     }
@@ -22,7 +23,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header />
+        <Header headerTitle="Pirates!" />
+
           {
             Object.keys(this.state.pirates)
               .map( key => <Pirate
@@ -34,6 +36,8 @@ class App extends Component {
           }
 
         <PirateForm
+          pirates={this.state.pirates}
+          updatePirate={this.updatePirate}
           addPirate={this.addPirate}
           loadSamples={this.loadSamples}
         />
@@ -64,8 +68,14 @@ class App extends Component {
     this.setState({pirates})
   }
 
+  updatePirate(key, updatedPirate) {
+    const pirates = { ...this.state.pirates }
+    pirates[key] = updatedPirate;
+    this.setState({ pirates });
+  }
+
   componentWillMount(){
-    this.ref = base.syncState(`daniel-deverell-pirates/pirates`, {
+    this.ref = base.syncState(`pirates`, {
       context: this,
       state: 'pirates'
     })
